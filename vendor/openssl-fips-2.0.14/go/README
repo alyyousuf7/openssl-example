@@ -1,0 +1,30 @@
+Importing from Go
+=================
+
+In order to access the OpenSSL API from a Go program, the cgo FFI
+can be used in conjunction with the FIPS mode loader in this folder.
+
+The openssl package in this folder must be present, copied or linked
+somewhere in the $GOPATH/src/ or $GOROOTsrc/ tree, then Go packages
+wishing to access the OpenSSL API must import it like following:
+
+		// #cgo pkg-config: openssl
+		import "C"
+		import _ "openssl"
+
+If the openssl package is not in the root of the src folder, remember
+to specify the relative path.
+
+If any Go symbol exported from the openssl package is used, the "_"
+character can be omitted.
+
+The application must then be linked against a FIPS-enabled OpenSSL
+as specified in the main manual.
+
+The import dependency will cause the openssl package to be initializated
+before any package that makes any use of it, and the use of a init()
+function in the package will ensure that FIPS self-tests are executed
+before the importing package is allowed to perform any action.
+
+The Status() function returns true when OpenSSL is operating in FIPS
+mode (always) and a version string.
