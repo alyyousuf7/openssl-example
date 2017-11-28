@@ -1,4 +1,4 @@
-FROM buildpack-deps:stretch
+FROM buildpack-deps:jessie
 
 ADD vendor/openssl-fips-2.0.14 /openssl-fips-2.0.14
 RUN cd /openssl-fips-2.0.14 && ./config && make && make install
