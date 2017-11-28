@@ -14,7 +14,7 @@ void initialize_fips(int mode) {
     }
 }
 
-void main() {
+int main() {
     initialize_fips(1);
 
     EC_KEY *key = EC_KEY_new_by_curve_name(NID_X9_62_prime256v1);
@@ -49,13 +49,32 @@ void main() {
     do_bn_print(stdout, d);
     fprintf(stdout, "\n");
 
+    // Some data for signing
+    unsigned char hash[] = "DnA68SOtgjCZRYq5NdjXf3RRPXKHHD44T3nDCilsC3CIQipZ1BblvKkLFyWofelxY36N8LDmewuqzg5fRdk6f4Khrbl3K5Mpgtqk";
+    
+    fprintf(stdout, "\nGenerating Signature\n");
+    fprintf(stdout, "\nHASH: %s", hash);
+  
+    ECDSA_SIG * signature = ECDSA_do_sign(hash, strlen(hash), key);
+  
+    if (signature == NULL) {
+        printf("Failed to generate EC Signature\n");
+        return NULL;
+    }   
+
+    if (verifySignature(hash, key, signature) != 1) {
+        return 0;
+    }
+    
+
     BN_free(x);
     BN_free(y);
     EC_KEY_free(key);
+
+    return 1;
 }
 
-int do_bn_print(FILE *out, const BIGNUM *bn)
-{
+int do_bn_print(FILE *out, const BIGNUM *bn) {
     int len, i;
     unsigned char *tmp;
     len = BN_num_bytes(bn);
@@ -76,4 +95,16 @@ int do_bn_print(FILE *out, const BIGNUM *bn)
         fprintf(out, "%02x", tmp[i]);
     OPENSSL_free(tmp);
     return 1;
+}
+
+int verifySignature(unsigned char * hash, EC_KEY * eckey, ECDSA_SIG * signature) {
+    int verifyStatus = ECDSA_do_verify(hash, strlen(hash), signature, eckey);
+    
+    if (verifyStatus != 1) {
+      printf("\nFailed to verify EC Signature\n");
+      return 0;
+    }
+    
+    printf("\nVerifed EC Signature\n");
+    return verifyStatus;
 }
