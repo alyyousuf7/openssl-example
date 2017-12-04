@@ -1,7 +1,7 @@
 CFLAGS = -g -I /usr/local/ssl/include
 LDFLAGS = -L /usr/local/ssl/lib -lcrypto -ldl
 
-all: clean bin/aes-encdec bin/gen-ecdsa-key bin/initialize-fips bin/fips-selftest bin/fips-mode-status bin/fips-zerorize
+all: clean bin/aes-encdec bin/gen-ecdsa-key bin/initialize-fips bin/fips-selftest bin/fips-mode-status bin/fips-zerorize bin/sym-key-gen
 
 clean:
 	@echo "+ $@"
@@ -31,6 +31,10 @@ bin/fips-mode-status:
 bin/fips-zerorize:
 	@echo "+ $@"
 	@$(CC) fips-zerorize/main.c -o $@ $(CFLAGS) $(LDFLAGS)
+
+bin/sym-key-gen:
+	@echo "+ $@"
+	@$(CC) sym-key-gen/main.c -o $@ $(CFLAGS) $(LDFLAGS)
 
 shell: image
 	@echo "+ $@"
