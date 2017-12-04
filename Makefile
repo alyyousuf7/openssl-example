@@ -1,4 +1,4 @@
-CFLAGS = -I /usr/local/ssl/include
+CFLAGS = -g -I /usr/local/ssl/include
 LDFLAGS = -L /usr/local/ssl/lib -lcrypto -ldl
 
 all: clean bin/aes-encdec bin/gen-ecdsa-key bin/initialize-fips bin/fips-selftest bin/fips-mode-status bin/fips-zerorize
@@ -34,7 +34,7 @@ bin/fips-zerorize:
 
 shell: image
 	@echo "+ $@"
-	docker run -it --rm -v ${PWD}:/root/src openssl:fips
+	docker run -it --rm --privileged -v ${PWD}:/root/src openssl:fips
 
 image: clean
 	@echo "+ $@"
