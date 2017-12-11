@@ -4,17 +4,18 @@
 
 void initialize_fips(int mode) {
     if(FIPS_mode_set(mode)) {
-        fprintf(stdout, "FUNCTION: %s, LOG: FIPS MODE SET TO %d\n", __func__, mode);
+        fprintf(stdout, "FIPS Mode Set\n\n");
     }
     else {
-        fprintf(stderr, "FUNCTION: %s, LOG: FIPS MODE NOT SET %d", __func__, mode);
-        ERR_load_crypto_strings();
-        fprintf(stderr, ", ERROR: ");
+        fprintf(stderr, "FIPS Mode Set Error:\n");
         ERR_print_errors_fp(stderr);
     }
 }
 
 int main(int argc, char* argv[]) {
+    OpenSSL_add_all_algorithms();
+    ERR_load_BIO_strings();
+    ERR_load_crypto_strings();
     initialize_fips(1);
 
     BIO               *outbio  = NULL;
@@ -22,13 +23,6 @@ int main(int argc, char* argv[]) {
     EVP_PKEY          *pkey    = NULL;
     int               eccgrp;
     char*             key_type = "secp521r1";
-
-    /* ---------------------------------------------------------- *
-    * These function calls initialize openssl for correct work.  *
-    * ---------------------------------------------------------- */
-    OpenSSL_add_all_algorithms();
-    ERR_load_BIO_strings();
-    ERR_load_crypto_strings();
 
     /* ---------------------------------------------------------- *
     * Create the Input/Output BIO's.                             *
@@ -107,6 +101,7 @@ int main(int argc, char* argv[]) {
     * Free up all structures                                     *
     * ---------------------------------------------------------- */
 FreeAll:
+    ERR_print_errors(outbio);
     EVP_PKEY_free(pkey);
     EC_KEY_free(myecc);
     BIO_free_all(outbio);

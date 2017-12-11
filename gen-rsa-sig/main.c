@@ -5,17 +5,18 @@
 
 void initialize_fips(int mode) {
     if(FIPS_mode_set(mode)) {
-        fprintf(stdout, "FUNCTION: %s, LOG: FIPS MODE SET TO %d\n", __func__, mode);
+        fprintf(stdout, "FIPS Mode Set\n\n");
     }
     else {
-        fprintf(stderr, "FUNCTION: %s, LOG: FIPS MODE NOT SET %d", __func__, mode);
-        ERR_load_crypto_strings();
-        fprintf(stderr, ", ERROR: ");
+        fprintf(stderr, "FIPS Mode Set Error:\n");
         ERR_print_errors_fp(stderr);
     }
 }
 
 int main(int argc, char* argv[]) {
+    OpenSSL_add_all_algorithms();
+    ERR_load_BIO_strings();
+    ERR_load_crypto_strings();
     initialize_fips(1);
 
     BIO               *outbio   = NULL;
@@ -100,8 +101,6 @@ int main(int argc, char* argv[]) {
 
     if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) != 1) {
         BIO_printf(outbio, "EVP_PKEY_CTX_set_rsa_padding error.\n");
-        ERR_load_crypto_strings();
-        ERR_print_errors_fp(stderr);
         goto FreeAll;
     }
 
@@ -154,8 +153,6 @@ int main(int argc, char* argv[]) {
     unsigned char *signature = malloc(sizeof(unsigned char) * signature_len);
     if (EVP_PKEY_sign(ctx, signature, &signature_len, hash, hashlen) != 1) {
         BIO_printf(outbio, "EVP_PKEY_sign - 2 error.\n");
-        ERR_load_crypto_strings();
-        ERR_print_errors_fp(stderr);
         goto FreeAll;
     }
 
@@ -177,6 +174,7 @@ int main(int argc, char* argv[]) {
     * Free up all structures                                     *
     * ---------------------------------------------------------- */
 FreeAll:
+    ERR_print_errors(outbio);
     BIO_free_all(sigbio);
     BIO_free_all(databio);
     BIO_free_all(outbio);

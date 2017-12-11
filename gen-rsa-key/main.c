@@ -13,6 +13,8 @@ void initialize_fips(int mode) {
 }
 
 int main(int argc, char* argv[]) {
+    OpenSSL_add_all_algorithms();
+    ERR_load_BIO_strings();
     ERR_load_crypto_strings();
     initialize_fips(1);
 
