@@ -23,6 +23,11 @@ bin/gen-ecdsa-sig:
 	@echo "+ $@"
 	@$(CC) gen-ecdsa-sig/main.c -o $@ $(CFLAGS) $(LDFLAGS)
 
+all: bin/gen-rsa-sig
+bin/gen-rsa-sig:
+	@echo "+ $@"
+	@$(CC) gen-rsa-sig/main.c -o $@ $(CFLAGS) $(LDFLAGS)
+
 all: bin/hmac
 bin/hmac:
 	@echo "+ $@"
@@ -57,6 +62,11 @@ all: bin/ver-ecdsa-sig
 bin/ver-ecdsa-sig:
 	@echo "+ $@"
 	@$(CC) ver-ecdsa-sig/main.c -o $@ $(CFLAGS) $(LDFLAGS)
+
+all: bin/ver-rsa-sig
+bin/ver-rsa-sig:
+	@echo "+ $@"
+	@$(CC) ver-rsa-sig/main.c -o $@ $(CFLAGS) $(LDFLAGS)
 
 shell: image
 	@echo "+ $@"
