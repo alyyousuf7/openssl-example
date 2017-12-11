@@ -164,13 +164,13 @@ int digest_message(const unsigned char *type, const unsigned char *message, size
     if (strcmp(type, "sha") == 0) {
         md = EVP_sha();
     } else if (strcmp(type, "sha1") == 0) {
-        md = EVP_sha1();
+        md = FIPS_evp_sha1();
     } else if (strcmp(type, "sha224") == 0) {
-        md = EVP_sha224();
+        md = FIPS_evp_sha224();
     } else if (strcmp(type, "sha256") == 0) {
-        md = EVP_sha256();
+        md = FIPS_evp_sha256();
     } else if (strcmp(type, "sha512") == 0) {
-        md = EVP_sha512();
+        md = FIPS_evp_sha512();
     }
 
 	if(1 != EVP_DigestInit_ex(mdctx, md, NULL)) {

@@ -52,15 +52,15 @@ int main(int argc, char* argv[]) {
     if (strcmp(md_type, "sha") == 0) {
         md = EVP_sha();
     } else if (strcmp(md_type, "sha1") == 0) {
-        md = EVP_sha1();
+        md = FIPS_evp_sha1();
     } else if (strcmp(md_type, "sha224") == 0) {
-        md = EVP_sha224();
+        md = FIPS_evp_sha224();
     } else if (strcmp(md_type, "sha256") == 0) {
-        md = EVP_sha256();
+        md = FIPS_evp_sha256();
     } else if (strcmp(md_type, "sha384") == 0) {
-        md = EVP_sha384();
+        md = FIPS_evp_sha384();
     } else if (strcmp(md_type, "sha512") == 0) {
-        md = EVP_sha512();
+        md = FIPS_evp_sha512();
     }
 
     /* ---------------------------------------------------------- *
@@ -199,13 +199,13 @@ int digest_message(const unsigned char *type, const unsigned char *message, size
     if (strcmp(type, "sha") == 0) {
         md = EVP_sha();
     } else if (strcmp(type, "sha1") == 0) {
-        md = EVP_sha1();
+        md = FIPS_evp_sha1();
     } else if (strcmp(type, "sha224") == 0) {
-        md = EVP_sha224();
+        md = FIPS_evp_sha224();
     } else if (strcmp(type, "sha256") == 0) {
-        md = EVP_sha256();
+        md = FIPS_evp_sha256();
     } else if (strcmp(type, "sha512") == 0) {
-        md = EVP_sha512();
+        md = FIPS_evp_sha512();
     } else if (strcmp(type, "md5") == 0) {
         md = EVP_md5();
     }
