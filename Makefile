@@ -23,6 +23,11 @@ bin/gen-ecdsa-sig:
 	@echo "+ $@"
 	@$(CC) gen-ecdsa-sig/main.c -o $@ $(CFLAGS) $(LDFLAGS)
 
+all: bin/gen-rsa-key
+bin/gen-rsa-key:
+	@echo "+ $@"
+	@$(CC) gen-rsa-key/main.c -o $@ $(CFLAGS) $(LDFLAGS)
+
 all: bin/gen-rsa-sig
 bin/gen-rsa-sig:
 	@echo "+ $@"
