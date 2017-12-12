@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
     /* -------------------------------------------------------- *
     * Create the public/private EC key pair here               *
     * ---------------------------------------------------------*/
-    if (! (EC_KEY_generate_key(myecc))) {
+    if (!(FIPS_ec_key_generate_key(myecc))) {
         BIO_printf(outbio, "Error generating the ECC key.\n");
         goto FreeAll;
     }
