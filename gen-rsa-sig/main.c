@@ -27,9 +27,10 @@ int main(int argc, char* argv[]) {
     EVP_PKEY          *pkey     = NULL;
     EVP_PKEY_CTX      *ctx      = NULL;
     EVP_MD            *md       = EVP_sha();
-    char*             md_type   = "sha";
-    char*             keypath   = "rsa-private.pem";
-    char*             datapath  = "data.bin";
+    char*             md_type       = "sha";
+    char*             padding_type  = "pkcs1v15";
+    char*             keypath       = "rsa-private.pem";
+    char*             datapath      = "data.bin";
     char*             signaturepath = "signature.bin";
 
     /* ---------------------------------------------------------- *
@@ -41,13 +42,14 @@ int main(int argc, char* argv[]) {
     /* ---------------------------------------------------------- *
     * Read arguments.                                            *
     * ---------------------------------------------------------- */
-    if (!(argc >= 3)) {
-        BIO_printf(outbio, "USAGE: %s [md] [keypath] [datapath] [signaturepath]\n\n", argv[0]);
+    if (!(argc >= 6)) {
+        BIO_printf(outbio, "USAGE: %s [md] [padding] [keypath] [datapath] [signaturepath]\n\n", argv[0]);
     } else {
-        md_type  = argv[1];
-        keypath  = argv[2];
-        datapath = argv[3];
-        signaturepath = argv[4];
+        md_type       = argv[1];
+        padding_type  = argv[2];
+        keypath       = argv[3];
+        datapath      = argv[4];
+        signaturepath = argv[5];
     }
     if (strcmp(md_type, "sha") == 0) {
         md = EVP_sha();
@@ -99,9 +101,31 @@ int main(int argc, char* argv[]) {
         goto FreeAll;
     }
 
-    if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) != 1) {
-        BIO_printf(outbio, "EVP_PKEY_CTX_set_rsa_padding error.\n");
-        goto FreeAll;
+    if (strcmp(padding_type, "pkcs1v15") == 0) {
+        if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PADDING) != 1) {
+            BIO_printf(outbio, "EVP_PKEY_CTX_set_rsa_padding error.\n");
+            goto FreeAll;
+        }
+    } else if (strcmp(padding_type, "pss-auto") == 0) {
+        if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PSS_PADDING) != 1) {
+            BIO_printf(outbio, "EVP_PKEY_CTX_set_rsa_padding error.\n");
+            goto FreeAll;
+        }
+
+        if (EVP_PKEY_CTX_set_rsa_pss_saltlen(ctx, -2) != 1) {
+            BIO_printf(outbio, "EVP_PKEY_CTX_set_rsa_pss_saltlen error.\n");
+            goto FreeAll;
+        }
+    } else if (strcmp(padding_type, "pss-equal") == 0) {
+        if (EVP_PKEY_CTX_set_rsa_padding(ctx, RSA_PKCS1_PSS_PADDING) != 1) {
+            BIO_printf(outbio, "EVP_PKEY_CTX_set_rsa_padding error.\n");
+            goto FreeAll;
+        }
+
+        if (EVP_PKEY_CTX_set_rsa_pss_saltlen(ctx, -1) != 1) {
+            BIO_printf(outbio, "EVP_PKEY_CTX_set_rsa_pss_saltlen error.\n");
+            goto FreeAll;
+        }
     }
 
     if (EVP_PKEY_CTX_set_signature_md(ctx, md) != 1) {
