@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     /* ---------------------------------------------------------- *
     * Read arguments.                                            *
     * ---------------------------------------------------------- */
-    if (!(argc >= 1)) {
+    if (!(argc >= 2)) {
         BIO_printf(outbio, "USAGE: %s [bits]\n\n", argv[0]);
     } else {
         kBits = atoi(argv[1]);

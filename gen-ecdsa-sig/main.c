@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     /* ---------------------------------------------------------- *
     * Read arguments.                                            *
     * ---------------------------------------------------------- */
-    if (!(argc >= 3)) {
+    if (!(argc >= 5)) {
         BIO_printf(outbio, "USAGE: %s [md] [keypath] [datapath] [signaturepath]\n\n", argv[0]);
     } else {
         md_type  = argv[1];
