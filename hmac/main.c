@@ -437,28 +437,28 @@ int make_keys(EVP_PKEY **skey, EVP_PKEY **vkey)
 
 int getIdByName(const char *name)
 {
-    if (name = SN_sha1)
+    if (strcmp(name, SN_sha1) == 0)
     {
         return NID_sha1;
     }
-    else if (name = SN_sha224)
+    else if (strcmp(name, SN_sha224) == 0)
     {
         return NID_sha224;
     }
-    else if (name = NID_sha256)
+    else if (strcmp(name, SN_sha256) == 0)
     {
         return NID_sha256;
     }
-    else if (name = NID_sha384)
+    else if (strcmp(name, SN_sha384) == 0)
     {
         return NID_sha384;
     }
-    else if (name = NID_sha512)
+    else if (strcmp(name, SN_sha512) == 0)
     {
         return NID_sha512;
     }
     else
     {
-        return NULL;
+        return 0;
     }
 }
