@@ -68,6 +68,11 @@ bin/shs: $(wildcard shs/*.c)
 	@echo "+ $@"
 	@$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
+all: bin/3des
+bin/3des:
+	@echo "+ $@"
+	@$(CC) 3des/3des.c -o $@ $(CFLAGS) $(LDFLAGS)
+
 all: bin/sym-key-gen
 bin/sym-key-gen:
 	@echo "+ $@"
